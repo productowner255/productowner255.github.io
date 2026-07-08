@@ -1,523 +1,388 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P3BYSS346P"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-P3BYSS346P');
+</script>
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "xj5ik2owc0");
+</script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arcade World Pro - Logic Sudoku</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Arcade World Master - GitHub Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6366f1;
-            --bg-gradient: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-            --app-bg: rgba(255, 255, 255, 0.95);
-            --text-main: #1e293b;
-            --card-bg: #ffffff;
-            --header-bg: #ffffff;
-            --border: rgba(0,0,0,0.1);
-            --correct: #22c55e;
-            --error: #f43f5e;
-            --coin: #fbbf24;
-            --locked: #94a3b8;
+            --primary: #6366f1; --secondary: #ec4899; --accent: #f59e0b;
+            --bg: #0f172a; --card: rgba(30, 41, 59, 0.9); --text: #f8fafc;
         }
 
-        [data-theme="pink"] {
-            --primary: #ec4899;
-            --bg-gradient: linear-gradient(-45deg, #fbcfe8, #f472b6, #ffffff, #fdf2f8);
-            --app-bg: rgba(255, 255, 255, 0.96);
-            --text-main: #831843;
-            --card-bg: #fff1f2;
-            --header-bg: #fff1f2;
-        }
-
-        [data-theme="neon"] {
-            --primary: #818cf8;
-            --bg-gradient: radial-gradient(circle at center, #1e1b4b 0%, #020617 100%);
-            --app-bg: rgba(15, 23, 42, 0.9);
-            --text-main: #ffffff;
-            --card-bg: #1e293b;
-            --header-bg: rgba(255, 255, 255, 0.05);
-        }
-
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
-            font-family: 'Nunito', sans-serif;
-            margin: 0; display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; background: var(--bg-gradient); background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite; color: var(--text-main);
-            overflow: hidden; user-select: none;
+            font-family: 'Montserrat', sans-serif; margin: 0; background: var(--bg); color: var(--text);
+            display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden;
         }
-
-        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
         #app {
-            width: 95%; max-width: 480px; background: var(--app-bg); backdrop-filter: blur(15px);
-            min-height: 85vh; border-radius: 40px; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
-            padding: 20px; display: flex; flex-direction: column; position: relative; transition: all 0.5s ease;
+            width: 100%; max-width: 450px; height: 95vh; background: var(--card);
+            backdrop-filter: blur(20px); border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 30px; display: flex; flex-direction: column; position: relative;
+            transition: transform 0.1s ease;
         }
 
-        .damage-shake { animation: damageAnim 0.4s ease-in-out; background: rgba(254, 226, 226, 1) !important; }
-        @keyframes damageAnim { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-10px); } 40%, 80% { transform: translateX(10px); } }
+        /* АНИМАЦИИ */
+        .shake { animation: shake 0.4s both; }
+        @keyframes shake { 10%, 90% { transform: translate3d(-2px, 0, 0); } 20%, 80% { transform: translate3d(3px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-5px, 0, 0); } 40%, 60% { transform: translate3d(5px, 0, 0); } }
+        
+        .flash-red { animation: flashRed 0.5s; }
+        @keyframes flashRed { 0% { background: rgba(255,0,0,0); } 50% { background: rgba(255,0,0,0.3); } 100% { background: rgba(255,0,0,0); } }
 
-        .header { display: flex; justify-content: space-between; align-items: center; background: var(--header-bg); padding: 12px 20px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        /* UI ЕЛЕМЕНТИ */
+        .header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); border-radius: 30px 30px 0 0; }
+        .stat-group { display: flex; flex-direction: column; align-items: center; }
+        .stat-val { font-weight: 900; font-size: 1.1rem; }
+        .timer-text { font-size: 0.7rem; color: #94a3b8; }
 
-        .screen { display: none; flex-direction: column; align-items: center; width: 100%; animation: fadeIn 0.3s ease; }
+        .screen { flex: 1; display: none; flex-direction: column; padding: 20px; overflow-y: auto; }
         .active { display: flex; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .menu-btn { 
-            width: 100%; padding: 20px; margin: 8px 0; border-radius: 25px; border: none; 
-            cursor: pointer; background: var(--card-bg); color: var(--text-main); 
-            font-family: inherit; font-weight: 900; box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
-            transition: all 0.2s;
+        .menu-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white; border: none; padding: 18px; border-radius: 15px;
+            margin-bottom: 12px; cursor: pointer; font-weight: bold; font-size: 1rem;
+            display: flex; justify-content: space-between; align-items: center; width: 100%;
+            transition: transform 0.2s;
         }
-        .menu-btn:hover { background-color: #cbd5e1 !important; transform: translateY(-2px); }
+        .menu-btn:active { transform: scale(0.95); }
 
-        /* SUDOKU MAP */
-        .level-card {
-            background: var(--card-bg); aspect-ratio: 1; display: flex; flex-direction: column; 
-            justify-content: center; align-items: center; font-weight: 900; 
-            border-radius: 15px; border: 2px solid var(--border); cursor: pointer; position: relative;
-        }
-        .level-locked { opacity: 0.5; cursor: not-allowed; }
-        .level-locked span { position: absolute; font-size: 1rem; opacity: 0.3; }
-        .level-completed { background-color: var(--correct) !important; color: white !important; border-color: #16a34a !important; }
-        .level-completed::after { content: '✔️'; position: absolute; top: 2px; right: 4px; font-size: 0.7rem; }
+        .grid { display: grid; gap: 8px; background: #334155; padding: 10px; border-radius: 15px; margin: 10px 0; width: 100%; aspect-ratio: 1; }
+        .cell { background: #1e293b; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-weight: 900; font-size: 1.5rem; cursor: pointer; color: white; }
+        .cell.fixed { color: #94a3b8; background: #0f172a; cursor: default; }
+        .cell.selected { background: var(--primary); transform: scale(1.05); box-shadow: 0 0 15px var(--primary); }
 
-        /* SUDOKU BOARD LOGIC VISUALS */
-        .board { display: grid; gap: 1px; background: #94a3b8; border: 4px solid #475569; border-radius: 8px; margin: 15px 0; overflow: hidden; }
-        .grid-4 { grid-template-columns: repeat(4, 1fr); width: 260px; }
-        .grid-6 { grid-template-columns: repeat(6, 1fr); width: 300px; }
-        .grid-9 { grid-template-columns: repeat(9, 1fr); width: 100%; max-width: 400px; }
+        canvas { background: #000; border-radius: 15px; width: 100%; display: block; margin: 0 auto; border: 2px solid #334155; }
+
+        .modal { position: absolute; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; border-radius: 30px; }
+
+        .controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 15px auto; width: 180px; }
+        .btn-ctrl { background: #475569; border: none; padding: 15px; border-radius: 12px; color: white; font-size: 1.2rem; cursor: pointer; }
         
-        .cell { background: white; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; font-weight: 800; cursor: pointer; color: #1e293b; }
-        .cell.fixed { color: #64748b; background: #f8fafc; }
-        .cell.selected { background: #e0e7ff; box-shadow: inset 0 0 0 3px var(--primary); }
-
-        /* Block Borders for Logic */
-        .grid-4 .cell:nth-child(2n) { border-right: 2px solid #475569; }
-        .grid-4 .cell:nth-child(n+5):nth-child(-n+8), .grid-4 .cell:nth-child(n+13) { border-top: 2px solid #475569; }
-        
-        .grid-6 .cell:nth-child(3n) { border-right: 2px solid #475569; }
-        .grid-6 .cell:nth-child(n+7):nth-child(-n+12), .grid-6 .cell:nth-child(n+19):nth-child(-n+24), .grid-6 .cell:nth-child(n+31) { border-top: 2px solid #475569; }
-
-        .grid-9 .cell:nth-child(3n) { border-right: 2px solid #475569; }
-        .grid-9 .cell:nth-child(n+28):nth-child(-n+36), .grid-9 .cell:nth-child(n+55):nth-child(-n+63) { border-top: 3px solid #475569; }
-
-        canvas { background: #f8fafc; border: 5px solid #e2e8f0; border-radius: 20px; }
-        #tetrisCanvas { background: #1e293b; border-color: #334155; }
-
-        .btn { padding: 12px 25px; border-radius: 15px; border: none; font-weight: 800; cursor: pointer; font-family: inherit; transition: 0.2s; }
-        .btn-primary { background: var(--primary); color: white; }
-
-        .result-screen { position: absolute; inset: 0; background: var(--app-bg); z-index: 500; display: none; flex-direction: column; align-items: center; justify-content: center; border-radius: 40px; text-align: center; padding: 20px; }
-        
-        .theme-selector { display: flex; gap: 10px; margin-top: 15px; }
-        .theme-dot { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 3px solid white; }
+        .t-2 { background: #eee4da; color: #776e65; } .t-4 { background: #ede0c8; color: #776e65; }
+        .t-8 { background: #f2b179; color: white; } .t-16 { background: #f59563; color: white; }
+        .t-32 { background: #f67c5f; color: white; } .t-64 { background: #f65e3b; color: white; }
+        .t-128 { background: #edcf72; color: white; } .t-256 { background: #edcc61; color: white; }
+        .t-512 { background: #edc850; color: white; } .t-1024 { background: #edc53f; color: white; }
+        .t-2048 { background: #edc22e; color: white; }
     </style>
 </head>
 <body>
 
 <div id="app">
+    <div id="flash-overlay" style="position:absolute; inset:0; pointer-events:none; border-radius:30px; z-index:99;"></div>
+    
     <div class="header">
-        <div class="life-container">
-            <div id="header-lives" style="color:var(--error); font-weight:900;">❤️❤️❤️❤️❤️</div>
-            <div id="life-timer" style="font-size: 10px; font-weight: bold;">Arcade Ready</div>
+        <div class="stat-group">
+            <div class="stat-val">❤️ <span id="lives">5</span></div>
+            <div id="life-timer" class="timer-text">Full</div>
         </div>
-        <div style="color:var(--coin); font-weight:900">💰 <span id="coins-display">300</span></div>
+        <div class="stat-group">
+            <div class="stat-val" style="color: #fbbf24;">💰 <span id="coins">80</span></div>
+            <div class="timer-text">Монети</div>
+        </div>
     </div>
 
-    <!-- MAIN MENU -->
+    <!-- MODAL -->
+    <div id="game-modal" class="modal">
+        <h1 id="m-icon" style="font-size: 4rem; margin:0;">🏆</h1>
+        <h2 id="m-title" style="margin:10px 0;">Браво!</h2>
+        <p id="m-desc">Ниво завършено!</p>
+        <button class="menu-btn" style="justify-content: center;" id="m-restart">ИГРАЙ ПАК</button>
+        <button class="menu-btn" style="justify-content: center; background: #334155; margin-top: 10px;" onclick="backToMenu()">МЕНЮ</button>
+    </div>
+
+    <!-- SCREENS -->
     <div id="menu-screen" class="screen active">
-        <h1 style="margin: 0 0 20px 0;">Arcade World</h1>
-        <button class="menu-btn" onclick="showScreen('sudoku-map')"><b>🧩 Sudoku</b><br><span id="stat-sudoku" style="font-size:0.8rem">Level 0/56</span></button>
-        <button class="menu-btn" onclick="startSnakeGame()"><b>🐍 Snake</b><br><span id="stat-snake" style="font-size:0.8rem">Best Score: 0</span></button>
-        <button class="menu-btn" onclick="startTetris()"><b>🧱 Tetris</b><br><span id="stat-tetris" style="font-size:0.8rem">Best Score: 0</span></button>
-        
-        <p style="margin-top:20px; font-weight:bold; font-size:0.8rem">THEMES:</p>
-        <div class="theme-selector">
-            <div class="theme-dot" style="background:#6366f1" onclick="setTheme('default')"></div>
-            <div class="theme-dot" style="background:#ec4899" onclick="setTheme('pink')"></div>
-            <div class="theme-dot" style="background:#1e1b4b" onclick="setTheme('neon')"></div>
-        </div>
+        <h1 style="text-align:center; margin-bottom: 20px;">Arcade World</h1>
+        <button class="menu-btn" onclick="initSudoku()">🧩 СУДОКУ <span id="sdk-lvl-display">Ниво 1</span></button>
+        <button class="menu-btn" onclick="initSnake()">🐍 ЗМИЯ <span>Record: <b id="rec-snake">0</b></span></button>
+        <button class="menu-btn" onclick="init2048()">🔢 2048 <span>Record: <b id="rec-2048">0</b></span></button>
+        <button class="menu-btn" onclick="initPong()">🏓 ТЕНИС <span>Record: <b id="rec-pong">0</b></span></button>
     </div>
 
-    <!-- SUDOKU MAP -->
-    <div id="sudoku-map" class="screen">
-        <h2>Sudoku Progress</h2>
-        <div id="level-list" style="display:grid; grid-template-columns: repeat(4, 1fr); gap:10px; width:100%; overflow-y:auto; max-height:50vh; padding:5px;"></div>
-        <button class="btn btn-primary" style="margin-top:20px; width:100%" onclick="showScreen('menu-screen')">Back to Menu</button>
-    </div>
-
-    <!-- SUDOKU GAME -->
-    <div id="sudoku-game" class="screen">
-        <h3 id="sudoku-title">Level</h3>
-        <div id="sudoku-board" class="board"></div>
-        <div id="sudoku-keypad" style="display:grid; grid-template-columns: repeat(5, 1fr); gap:8px; width:100%"></div>
-        <button class="btn btn-primary" style="margin-top:20px; width:100%" onclick="buyHint()">💡 Hint (-50 💰)</button>
-        <button class="btn" style="margin-top:10px; width:100%; background:#f1f5f9; color:#334155" onclick="showScreen('sudoku-map')">Quit Game</button>
-    </div>
-
-    <!-- SNAKE GAME -->
-    <div id="snake-screen" class="screen">
-        <div style="width:100%; display:flex; justify-content:space-between; margin-bottom:10px; font-weight:900">
-            <span>Score: <span id="snake-score">0</span></span>
+    <div id="game-screen" class="screen">
+        <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom:10px;">
+            <h2 id="game-title" style="margin:0;">Игра</h2>
+            <button id="hint-btn" class="menu-btn" style="width: auto; padding: 8px 15px; background: var(--accent); display:none" onclick="buyHint()">💡 Hint (80)</button>
         </div>
-        <canvas id="snakeCanvas" width="300" height="300"></canvas>
-        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-top:20px">
-            <div></div><button class="btn" onclick="snakeDir('UP')">▲</button><div></div>
-            <button class="btn" onclick="snakeDir('LEFT')">◀</button>
-            <button class="btn" onclick="snakeDir('DOWN')">▼</button>
-            <button class="btn" onclick="snakeDir('RIGHT')">▶</button>
-        </div>
-    </div>
-
-    <!-- TETRIS GAME -->
-    <div id="tetris-screen" class="screen">
-        <div style="width:100%; display:flex; justify-content:space-between; margin-bottom:10px; font-weight:900">
-            <span>Score: <span id="tetris-score">0</span></span>
-        </div>
-        <canvas id="tetrisCanvas" width="200" height="400"></canvas>
-        <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:5px; margin-top:15px; width:100%">
-            <button class="btn" onclick="tetrisMove(-1)">◀</button>
-            <button class="btn" onclick="tetrisRotate()">🔄</button>
-            <button class="btn" onclick="tetrisMove(1)">▶</button>
-            <button class="btn" onclick="tetrisDrop()">▼</button>
-        </div>
-    </div>
-
-    <!-- RESULT MODAL -->
-    <div id="result-modal" class="result-screen">
-        <h1 id="res-icon" style="font-size:5rem; margin:0">🏆</h1>
-        <h2 id="res-title">EXCELLENT!</h2>
-        <p id="res-desc"></p>
-        <div style="display:flex; flex-direction:column; gap:10px; width:100%; margin-top:20px">
-            <button id="btn-again" class="btn btn-primary" onclick="">TRY AGAIN</button>
-            <button class="btn" onclick="showScreen('menu-screen')">BACK TO MENU</button>
-        </div>
+        <div id="board-container"></div>
+        <div id="game-controls"></div>
+        <button class="menu-btn" style="background:#334155; margin-top:20px; justify-content: center;" onclick="backToMenu()">НАЗАД</button>
     </div>
 </div>
 
 <script>
-    // --- STATE & STORAGE ---
-    const MAX_LIVES = 5;
-    const REFILL_TIME = 120000;
-    let activeGameType = null;
-
-    let gameState = {
-        coins: 300,
-        unlockedCount: 1,
-        completedLevels: [],
-        snakeHighScore: 0,
-        tetrisHighScore: 0,
-        theme: 'default',
-        lives: { sudoku: 5, snake: 5, tetris: 5 },
-        lastRefill: { sudoku: Date.now(), snake: Date.now(), tetris: Date.now() }
+    // --- STATE & DATA ---
+    let state = JSON.parse(localStorage.getItem('arcade_pro_final')) || {
+        coins: 80, lives: 5, sdkLvl: 1, lastLifeTime: Date.now(),
+        records: { sdk: 0, snake: 0, t2048: 0, pong: 0 }
     };
 
-    function save() { 
-        localStorage.setItem('ArcadeLogic_V6', JSON.stringify(gameState)); 
-        updateMenuStats();
+    function save() {
+        localStorage.setItem('arcade_pro_final', JSON.stringify(state));
+        document.getElementById('lives').innerText = state.lives;
+        document.getElementById('coins').innerText = state.coins;
+        document.getElementById('rec-snake').innerText = state.records.snake;
+        document.getElementById('rec-2048').innerText = state.records.t2048;
+        document.getElementById('rec-pong').innerText = state.records.pong;
+        document.getElementById('sdk-lvl-display').innerText = `Ниво ${state.sdkLvl}`;
     }
 
-    function load() {
-        const data = localStorage.getItem('ArcadeLogic_V6');
-        if (data) gameState = JSON.parse(data);
-        setTheme(gameState.theme);
-        updateRefills();
+    // --- REGEN LIVES (3 MINS) ---
+    setInterval(() => {
+        if(state.lives < 5) {
+            let diff = Date.now() - state.lastLifeTime;
+            let cooldown = 180000; 
+            if(diff >= cooldown) { state.lives++; state.lastLifeTime = Date.now(); save(); }
+            let rem = Math.ceil((cooldown - diff) / 1000);
+            document.getElementById('life-timer').innerText = `${Math.floor(rem/60)}:${(rem%60).toString().padStart(2,'0')}`;
+        } else { document.getElementById('life-timer').innerText = "Full"; }
+    }, 1000);
+
+    let loop = null;
+    function showScreen(id) {
+        clearInterval(loop);
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.getElementById('game-modal').style.display = 'none';
     }
 
-    function updateRefills() {
-        const now = Date.now();
-        ['sudoku', 'snake', 'tetris'].forEach(type => {
-            if (gameState.lives[type] < MAX_LIVES) {
-                const diff = now - gameState.lastRefill[type];
-                const refillCount = Math.floor(diff / REFILL_TIME);
-                if (refillCount > 0) {
-                    gameState.lives[type] = Math.min(MAX_LIVES, gameState.lives[type] + refillCount);
-                    gameState.lastRefill[type] = now - (diff % REFILL_TIME);
-                }
-            } else { gameState.lastRefill[type] = now; }
-        });
-        renderLifeUI();
+    function backToMenu() { showScreen('menu-screen'); }
+
+    function triggerDamage() {
+        document.getElementById('app').classList.add('shake');
+        document.getElementById('flash-overlay').classList.add('flash-red');
+        setTimeout(() => {
+            document.getElementById('app').classList.remove('shake');
+            document.getElementById('flash-overlay').classList.remove('flash-red');
+        }, 500);
+        state.lives--; 
+        if(state.lives === 4) state.lastLifeTime = Date.now();
+        save();
+        if(state.lives <= 0) endGame('💀', 'ГЕЙМ ОУВЪР', 'Нямаш повече животи!', null);
+    }
+
+    function endGame(icon, title, desc, restartFn, btnText = "ИГРАЙ ПАК") {
+        clearInterval(loop);
+        document.getElementById('m-icon').innerText = icon;
+        document.getElementById('m-title').innerText = title;
+        document.getElementById('m-desc').innerText = desc;
+        document.getElementById('game-modal').style.display = 'flex';
+        const rBtn = document.getElementById('m-restart');
+        rBtn.innerText = btnText;
+        rBtn.onclick = restartFn;
         save();
     }
-    setInterval(updateRefills, 1000);
 
-    function renderLifeUI() {
-        const livesDisplay = document.getElementById('header-lives');
-        const timerDisplay = document.getElementById('life-timer');
-        if (!activeGameType) {
-            livesDisplay.innerText = "❤️❤️❤️❤️❤️"; timerDisplay.innerText = "SELECT GAME";
-        } else {
-            const currentLives = gameState.lives[activeGameType];
-            livesDisplay.innerText = "❤️".repeat(currentLives) + "🖤".repeat(MAX_LIVES - currentLives);
-            if (currentLives < MAX_LIVES) {
-                const rem = REFILL_TIME - (Date.now() - gameState.lastRefill[activeGameType]);
-                timerDisplay.innerText = `REFILL: ${Math.floor(rem/60000)}:${Math.floor((rem%60000)/1000).toString().padStart(2, '0')}`;
-            } else timerDisplay.innerText = "LIVES FULL";
+    // --- SUDOKU ENGINE ---
+    let sdk = {};
+    function initSudoku() {
+        if(state.lives <= 0) return;
+        showScreen('game-screen');
+        document.getElementById('game-title').innerText = `Судоку - Ниво ${state.sdkLvl}`;
+        document.getElementById('hint-btn').style.display = 'block';
+        const container = document.getElementById('board-container');
+        container.innerHTML = '<div id="sdk-grid" class="grid" style="grid-template-columns: repeat(4, 1fr)"></div>';
+        const sol = [1,2,3,4, 3,4,1,2, 2,1,4,3, 4,3,2,1];
+        let hideChance = Math.min(0.8, 0.4 + (state.sdkLvl * 0.05));
+        let board = sol.map(v => Math.random() < hideChance ? 0 : v);
+        if(!board.includes(0)) board[Math.floor(Math.random()*16)] = 0;
+        sdk = { sol: sol, board: board, selected: null };
+        const controls = document.getElementById('game-controls');
+        controls.innerHTML = '<div id="sdk-keypad" style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px"></div>';
+        for(let i=1; i<=4; i++) {
+            let b = document.createElement('button'); b.className = 'btn-ctrl'; b.innerText = i;
+            b.onclick = () => {
+                if(sdk.selected !== null && sdk.board[sdk.selected] === 0) {
+                    if(sdk.sol[sdk.selected] === i) {
+                        sdk.board[sdk.selected] = i; drawSudoku();
+                        if(!sdk.board.includes(0)) {
+                            state.coins += 30; state.sdkLvl++; save();
+                            endGame('🏆', 'ПОБЕДА!', `Завърши ниво ${state.sdkLvl-1}! +30 монети`, initSudoku, "СЛЕДВАЩО НИВО");
+                        }
+                    } else { triggerDamage(); }
+                }
+            };
+            document.getElementById('sdk-keypad').appendChild(b);
         }
-        document.getElementById('coins-display').innerText = gameState.coins;
+        drawSudoku();
     }
 
-    function setTheme(t) { document.body.setAttribute('data-theme', t); gameState.theme = t; save(); }
-
-    function showScreen(id) {
-        document.querySelectorAll('.screen, .result-screen').forEach(s => s.style.display = 'none');
-        document.getElementById(id).style.display = 'flex';
-        if (id.includes('sudoku')) activeGameType = 'sudoku';
-        else if (id === 'snake-screen') activeGameType = 'snake';
-        else if (id === 'tetris-screen') activeGameType = 'tetris';
-        else activeGameType = null;
-
-        if (id === 'sudoku-map') renderSudokuMap();
-        clearInterval(snakeInterval); clearInterval(tetrisInterval);
-        renderLifeUI();
-    }
-
-    function triggerError() {
-        const app = document.getElementById('app');
-        app.classList.remove('damage-shake'); void app.offsetWidth;
-        app.classList.add('damage-shake');
-        setTimeout(() => app.classList.remove('damage-shake'), 400);
-    }
-
-    function showResult(icon, title, desc, action) {
-        document.getElementById('res-icon').innerText = icon;
-        document.getElementById('res-title').innerText = title;
-        document.getElementById('res-desc').innerText = desc;
-        document.getElementById('btn-again').onclick = action;
-        showScreen('result-modal');
-    }
-
-    function updateMenuStats() {
-        document.getElementById('stat-sudoku').innerText = `Level ${gameState.completedLevels.length}/56`;
-        document.getElementById('stat-snake').innerText = `Best Score: ${gameState.snakeHighScore}`;
-        document.getElementById('stat-tetris').innerText = `Best Score: ${gameState.tetrisHighScore}`;
-        document.getElementById('coins-display').innerText = gameState.coins;
-    }
-
-    // --- LOGICAL SUDOKU GENERATOR ---
-    const seeds = {
-        4: [1,2,3,4, 3,4,1,2, 2,1,4,3, 4,3,2,1],
-        6: [1,2,3,4,5,6, 4,5,6,1,2,3, 2,3,1,5,6,4, 5,6,4,2,3,1, 3,1,2,6,4,5, 6,4,5,3,1,2],
-        9: [5,3,4,6,7,8,9,1,2, 6,7,2,1,9,5,3,4,8, 1,9,8,3,4,2,5,6,7, 8,5,9,7,6,1,4,2,3, 4,2,6,8,5,3,7,9,1, 7,1,3,9,2,4,8,5,6, 9,6,1,5,3,7,2,8,4, 2,8,7,4,1,9,6,3,5, 3,4,5,2,8,6,1,7,9]
-    };
-
-    function shuffleSudoku(size) {
-        let grid = [...seeds[size]];
-        // Shuffle numbers
-        let nums = Array.from({length: size}, (_, i) => i + 1);
-        for(let i = nums.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [nums[i], nums[j]] = [nums[j], nums[i]];
-        }
-        return grid.map(n => nums[n-1]);
-    }
-
-    const levels = [];
-    for (let i = 1; i <= 56; i++) {
-        let size = i <= 15 ? 4 : (i <= 35 ? 6 : 9);
-        let clues = size === 4 ? 6 : (size === 6 ? 14 : 32); // Logical counts
-        let sol = shuffleSudoku(size);
-        // Create puzzle by hiding items logically
-        let grid = sol.map((v, idx) => Math.random() > (clues / (size*size)) ? 0 : v);
-        levels.push({ id: i, size, reward: size * 10, solution: sol, grid: grid });
-    }
-
-    function renderSudokuMap() {
-        const list = document.getElementById('level-list'); list.innerHTML = '';
-        levels.forEach(l => {
-            const isUnl = l.id <= (gameState.completedLevels.length + 1);
-            const isComp = gameState.completedLevels.includes(l.id);
-            const card = document.createElement('div');
-            card.className = `level-card ${!isUnl ? 'level-locked' : ''} ${isComp ? 'level-completed' : ''}`;
-            if (!isUnl) card.innerHTML = `<span>${l.id}</span>🔒`;
-            else {
-                card.innerHTML = l.id;
-                card.onclick = () => startSudoku(l.id - 1);
-            }
-            list.appendChild(card);
-        });
-    }
-
-    let curSudoku = null, userGrid = [], selectedIdx = null;
-    function startSudoku(idx) {
-        if(gameState.lives.sudoku <= 0) return;
-        curSudoku = levels[idx]; userGrid = [...curSudoku.grid]; selectedIdx = null;
-        showScreen('sudoku-game'); updateSudokuUI();
-    }
-
-    function updateSudokuUI() {
-        document.getElementById('sudoku-title').innerText = `SUDOKU LVL ${curSudoku.id}`;
-        const b = document.getElementById('sudoku-board');
-        b.className = `board grid-${curSudoku.size}`; b.innerHTML = '';
-        userGrid.forEach((v, i) => {
-            const c = document.createElement('div');
-            c.className = `cell ${curSudoku.grid[i] !== 0 ? 'fixed' : ''} ${selectedIdx === i ? 'selected' : ''}`;
+    function drawSudoku() {
+        const grid = document.getElementById('sdk-grid'); grid.innerHTML = '';
+        sdk.board.forEach((v, i) => {
+            let c = document.createElement('div');
+            c.className = `cell ${v !== 0 ? 'fixed' : ''} ${sdk.selected === i ? 'selected' : ''}`;
             c.innerText = v || '';
-            if(curSudoku.grid[i] === 0) c.onclick = () => { selectedIdx = i; updateSudokuUI(); };
-            b.appendChild(c);
+            c.onclick = () => { sdk.selected = i; drawSudoku(); };
+            grid.appendChild(c);
         });
-        renderKeypad();
     }
-
-    function renderKeypad() {
-        const k = document.getElementById('sudoku-keypad'); k.innerHTML = '';
-        for(let i=1; i<=curSudoku.size; i++) {
-            const btn = document.createElement('button'); btn.className = 'btn'; btn.style.background='#1e293b'; btn.style.color='#fff'; btn.innerText = i;
-            btn.onclick = () => sudokuInput(i);
-            k.appendChild(btn);
-        }
-    }
-
-    function sudokuInput(num) {
-        if(selectedIdx === null) return;
-        if(num === curSudoku.solution[selectedIdx]) {
-            userGrid[selectedIdx] = num;
-            if(userGrid.every((v,ix)=>v===curSudoku.solution[ix])) winSudoku();
-            updateSudokuUI();
-        } else {
-            gameState.lives.sudoku--; if(gameState.lives.sudoku === MAX_LIVES-1) gameState.lastRefill.sudoku = Date.now();
-            save(); triggerError(); renderLifeUI();
-            if(gameState.lives.sudoku <= 0) showResult("💔", "GAME OVER", "No more lives for Sudoku!", () => showScreen('menu-screen'));
-        }
-    }
-
-    function winSudoku() {
-        if(!gameState.completedLevels.includes(curSudoku.id)) {
-            gameState.completedLevels.push(curSudoku.id); gameState.coins += curSudoku.reward;
-        }
-        save(); showResult("✔️", "CLEARED!", `Level ${curSudoku.id} complete! +${curSudoku.reward} Coins`, () => showScreen('sudoku-map'));
-    }
-
-    // --- SNAKE ---
-    let snake, food, snakeDirVal, snakeInterval, snakeScore;
-    const sCtx = document.getElementById('snakeCanvas').getContext('2d');
-    function startSnakeGame() {
-        if(gameState.lives.snake <= 0) return;
-        showScreen('snake-screen');
-        snake = [{x:10, y:10}, {x:10, y:11}]; food = {x:5, y:5}; snakeDirVal = 'UP'; snakeScore = 0;
-        snakeInterval = setInterval(updateSnake, 130);
-    }
-    function snakeDir(d) {
-        if(d==='UP' && snakeDirVal==='DOWN' || d==='DOWN' && snakeDirVal==='UP' || d==='LEFT' && snakeDirVal==='RIGHT' || d==='RIGHT' && snakeDirVal==='LEFT') return;
-        snakeDirVal = d;
-    }
-    function updateSnake() {
-        let head = {...snake[0]};
-        if(snakeDirVal==='UP') head.y--; if(snakeDirVal==='DOWN') head.y++; if(snakeDirVal==='LEFT') head.x--; if(snakeDirVal==='RIGHT') head.x++;
-        if(head.x<0 || head.x>=20 || head.y<0 || head.y>=20 || snake.some(s=>s.x===head.x && s.y===head.y)) { endSnake(); return; }
-        snake.unshift(head);
-        if(head.x===food.x && head.y===food.y) {
-            snakeScore += 10; food = {x:Math.floor(Math.random()*20), y:Math.floor(Math.random()*20)};
-        } else snake.pop();
-        sCtx.clearRect(0,0,300,300);
-        sCtx.fillStyle='red'; sCtx.beginPath(); sCtx.arc(food.x*15+7.5, food.y*15+7.5, 6, 0, Math.PI*2); sCtx.fill();
-        snake.forEach((s,i)=>{
-            sCtx.fillStyle = i===0 ? '#059669':'#10b981';
-            sCtx.beginPath(); sCtx.arc(s.x*15+7.5, s.y*15+7.5, i===0 ? 7.5:6, 0, Math.PI*2); sCtx.fill();
-            if(i===0) { sCtx.fillStyle='white'; sCtx.beginPath(); sCtx.arc(s.x*15+5,s.y*15+5,2,0,Math.PI*2); sCtx.fill(); sCtx.beginPath(); sCtx.arc(s.x*15+10,s.y*15+5,2,0,Math.PI*2); sCtx.fill(); }
-        });
-        document.getElementById('snake-score').innerText = snakeScore;
-    }
-    function endSnake() {
-        clearInterval(snakeInterval); gameState.lives.snake--; if(gameState.lives.snake === MAX_LIVES-1) gameState.lastRefill.snake = Date.now();
-        const rew = Math.floor(snakeScore/5); gameState.coins += rew; if(snakeScore > gameState.snakeHighScore) gameState.snakeHighScore = snakeScore;
-        save(); triggerError(); showResult("🐍", "SNAKE OVER", `Score: ${snakeScore} | Reward: +${rew} 💰`, () => startSnakeGame());
-    }
-
-    // --- TETRIS ---
-    let tCtx = document.getElementById('tetrisCanvas').getContext('2d');
-    let tetrisArena, tetrisPlayer, tetrisInterval, tetrisScoreVal;
-    const tColors = [null, '#06b6d4', '#3b82f6', '#f97316', '#eab308', '#22c55e', '#a855f7', '#ef4444'];
-    function startTetris() {
-        if(gameState.lives.tetris <= 0) return;
-        showScreen('tetris-screen');
-        tetrisArena = Array.from({length:20}, ()=>Array(10).fill(0));
-        tetrisPlayer = {pos:{x:3,y:0}, matrix:[[0,1,0],[1,1,1],[0,0,0]]};
-        tetrisScoreVal = 0; tetrisInterval = setInterval(tetrisUpdate, 800); drawTetris();
-    }
-    function tetrisUpdate() {
-        tetrisPlayer.pos.y++; if(collide()) { tetrisPlayer.pos.y--; merge(); resetPlayer(); arenaSweep(); }
-        drawTetris();
-    }
-    function collide() {
-        const [m, o] = [tetrisPlayer.matrix, tetrisPlayer.pos];
-        for(let y=0; y<m.length; y++) for(let x=0; x<m[y].length; x++) 
-            if(m[y][x]!==0 && (tetrisArena[y+o.y] && tetrisArena[y+o.y][x+o.x])!==0) return true;
-        return false;
-    }
-    function merge() {
-        tetrisPlayer.matrix.forEach((row,y)=>row.forEach((v,x)=>{ if(v!==0) tetrisArena[y+tetrisPlayer.pos.y][x+tetrisPlayer.pos.x]=v; }));
-    }
-    function resetPlayer() {
-        const p = [[[0,1,0,0],[0,1,0,0],[0,1,0,0],[0,1,0,0]],[[2,2],[2,2]],[[0,3,0],[3,3,3],[0,0,0]]];
-        tetrisPlayer.matrix = p[Math.floor(Math.random()*p.length)]; tetrisPlayer.pos.y=0; tetrisPlayer.pos.x=3;
-        if(collide()) endTetris();
-    }
-    function arenaSweep() {
-        outer: for(let y=tetrisArena.length-1; y>0; y--) {
-            for(let x=0; x<tetrisArena[y].length; x++) if(tetrisArena[y][x]===0) continue outer;
-            tetrisArena.splice(y,1); tetrisArena.unshift(new Array(10).fill(0)); tetrisScoreVal+=100; y++;
-        }
-        document.getElementById('tetris-score').innerText = tetrisScoreVal;
-    }
-    function drawTetris() {
-        tCtx.fillStyle='#1e293b'; tCtx.fillRect(0,0,200,400);
-        tetrisArena.forEach((row,y)=>row.forEach((v,x)=>{ if(v) { tCtx.fillStyle=tColors[v]; tCtx.fillRect(x*20,y*20,19,19); }}));
-        tetrisPlayer.matrix.forEach((row,y)=>row.forEach((v,x)=>{ if(v) { tCtx.fillStyle=tColors[v]; tCtx.fillRect((x+tetrisPlayer.pos.x)*20,(y+tetrisPlayer.pos.y)*20,19,19); }}));
-    }
-    function tetrisMove(d) { tetrisPlayer.pos.x+=d; if(collide()) tetrisPlayer.pos.x-=d; drawTetris(); }
-    function tetrisRotate() {
-        const m = tetrisPlayer.matrix; for(let y=0; y<m.length; y++) for(let x=0; x<y; x++) [m[x][y], m[y][x]]=[m[y][x], m[x][y]];
-        m.forEach(r=>r.reverse()); if(collide()) m.forEach(r=>r.reverse()); drawTetris();
-    }
-    function tetrisDrop() { tetrisUpdate(); }
-    function endTetris() {
-        clearInterval(tetrisInterval); gameState.lives.tetris--; if(gameState.lives.tetris === MAX_LIVES-1) gameState.lastRefill.tetris = Date.now();
-        if(tetrisScoreVal > gameState.tetrisHighScore) gameState.tetrisHighScore = tetrisScoreVal;
-        save(); triggerError(); showResult("🧱", "GAME OVER", `Score: ${tetrisScoreVal}`, () => startTetris());
-    }
-
-    // --- INPUTS ---
-    window.addEventListener('keydown', (e) => {
-        if (activeGameType === 'snake') {
-            if (e.key === 'ArrowUp' || e.key === 'w') snakeDir('UP');
-            if (e.key === 'ArrowDown' || e.key === 's') snakeDir('DOWN');
-            if (e.key === 'ArrowLeft' || e.key === 'a') snakeDir('LEFT');
-            if (e.key === 'ArrowRight' || e.key === 'd') snakeDir('RIGHT');
-        }
-        if (activeGameType === 'tetris') {
-            if (e.key === 'ArrowLeft' || e.key === 'a') tetrisMove(-1);
-            if (e.key === 'ArrowRight' || e.key === 'd') tetrisMove(1);
-            if (e.key === 'ArrowUp' || e.key === 'w') tetrisRotate();
-            if (e.key === 'ArrowDown' || e.key === 's') tetrisDrop();
-        }
-        if (activeGameType === 'sudoku' && curSudoku) {
-            const sz = curSudoku.size; if(selectedIdx === null) selectedIdx = 0;
-            if (e.key === 'ArrowUp' && selectedIdx >= sz) selectedIdx -= sz;
-            if (e.key === 'ArrowDown' && selectedIdx + sz < sz * sz) selectedIdx += sz;
-            if (e.key === 'ArrowLeft' && selectedIdx % sz > 0) selectedIdx--;
-            if (e.key === 'ArrowRight' && selectedIdx % sz < sz - 1) selectedIdx++;
-            if (e.key >= '1' && e.key <= '9') { const v = parseInt(e.key); if (v <= sz) sudokuInput(v); }
-            updateSudokuUI();
-        }
-    });
 
     function buyHint() {
-        if(gameState.coins < 50) return;
-        const empty = userGrid.map((v,i)=>v===0?i:null).filter(v=>v!==null);
-        if(empty.length) {
-            gameState.coins -= 50; const r = empty[Math.floor(Math.random()*empty.length)];
-            userGrid[r] = curSudoku.solution[r]; save(); updateSudokuUI();
+        if(state.coins >= 80) {
+            let empty = sdk.board.map((v,i) => v===0?i:null).filter(v=>v!==null);
+            if(empty.length) { 
+                let r = empty[Math.floor(Math.random()*empty.length)]; 
+                sdk.board[r] = sdk.sol[r]; state.coins -= 80; drawSudoku(); save(); 
+            }
         }
     }
 
-    // --- START ---
-    load();
-</script>
-</body>
-</html>
-    load();
+    // --- SNAKE ENGINE ---
+    let snk = { body: [], dir: 'R', food: {} };
+    function initSnake() {
+        showScreen('game-screen');
+        document.getElementById('game-title').innerText = "Змия";
+        document.getElementById('hint-btn').style.display = 'none';
+        document.getElementById('board-container').innerHTML = '<canvas id="snk-canvas" width="300" height="300"></canvas>';
+        document.getElementById('game-controls').innerHTML = `
+            <div class="controls">
+                <div></div><button class="btn-ctrl" onclick="snk.dir='U'">↑</button><div></div>
+                <button class="btn-ctrl" onclick="snk.dir='L'">←</button>
+                <button class="btn-ctrl" onclick="snk.dir='D'">↓</button>
+                <button class="btn-ctrl" onclick="snk.dir='R'">→</button>
+            </div>`;
+        snk.body = [{x:10, y:10}, {x:9, y:10}]; snk.dir = 'R'; snk.food = {x:15, y:15}; let score = 0;
+        const ctx = document.getElementById('snk-canvas').getContext('2d');
+        loop = setInterval(() => {
+            let h = {...snk.body[0]};
+            if(snk.dir==='U') h.y--; if(snk.dir==='D') h.y++; if(snk.dir==='L') h.x--; if(snk.dir==='R') h.x++;
+            if(h.x<0 || h.x>=20 || h.y<0 || h.y>=20 || snk.body.some(s=>s.x===h.x && s.y===h.y)) {
+                state.coins += score; if(score > state.records.snake) state.records.snake = score;
+                endGame('🐍', 'КРАЙ', `Спечели ${score} монети`, initSnake); return;
+            }
+            snk.body.unshift(h);
+            if(h.x === snk.food.x && h.y === snk.food.y) { score++; snk.food = {x:Math.floor(Math.random()*20), y:Math.floor(Math.random()*20)}; } else snk.body.pop();
+            ctx.fillStyle = '#000'; ctx.fillRect(0,0,300,300);
+            ctx.fillStyle = 'red'; ctx.beginPath(); ctx.arc(snk.food.x*15+7.5, snk.food.y*15+7.5, 7, 0, Math.PI*2); ctx.fill();
+            snk.body.forEach((s, i) => { ctx.fillStyle = i===0 ? '#4ade80' : '#166534'; ctx.fillRect(s.x*15, s.y*15, 14, 14); });
+        }, 130);
+    }
+
+    // --- 2048 ENGINE ---
+    let b2048 = [];
+    let current2048Score = 0;
+    function init2048() {
+        showScreen('game-screen');
+        current2048Score = 0;
+        document.getElementById('game-title').innerText = "2048: 0";
+        document.getElementById('hint-btn').style.display = 'none';
+        document.getElementById('board-container').innerHTML = '<div id="grid-2048" class="grid" style="grid-template-columns:repeat(4,1fr)"></div>';
+        document.getElementById('game-controls').innerHTML = `
+            <div class="controls">
+                <div></div><button class="btn-ctrl" onclick="move2048('U')">↑</button><div></div>
+                <button class="btn-ctrl" onclick="move2048('L')">←</button>
+                <button class="btn-ctrl" onclick="move2048('D')">↓</button>
+                <button class="btn-ctrl" onclick="move2048('R')">→</button>
+            </div>`;
+        b2048 = Array(16).fill(0); add2048(); add2048(); draw2048();
+    }
+    function add2048() { let empty = b2048.map((v,i)=>v===0?i:null).filter(v=>v!==null); if(empty.length) b2048[empty[Math.floor(Math.random()*empty.length)]] = 2; }
+    function draw2048() {
+        const g = document.getElementById('grid-2048'); g.innerHTML = '';
+        b2048.forEach(v => { let c = document.createElement('div'); c.className = `cell t-${v}`; c.innerText = v || ''; g.appendChild(c); });
+    }
+    function move2048(d) {
+        let moved = false;
+        const combine = (row) => {
+            let res = row.filter(v => v !== 0);
+            for(let i=0; i<res.length-1; i++) { 
+                if(res[i] === res[i+1]) { 
+                    res[i]*=2; 
+                    current2048Score += res[i]; 
+                    res.splice(i+1, 1); 
+                    moved = true; 
+                } 
+            }
+            while(res.length < 4) res.push(0); return res;
+        };
+        for(let i=0; i<4; i++) {
+            let row = [];
+            for(let j=0; j<4; j++) { if(d==='L' || d==='R') row.push(b2048[i*4 + j]); else row.push(b2048[j*4 + i]); }
+            if(d==='R' || d==='D') row.reverse();
+            let newRow = combine(row);
+            if(d==='R' || d==='D') newRow.reverse();
+            if(JSON.stringify(row) !== JSON.stringify(newRow)) moved = true;
+            for(let j=0; j<4; j++) { if(d==='L' || d==='R') b2048[i*4 + j] = newRow[j]; else b2048[j*4 + i] = newRow[j]; }
+        }
+        if(moved) { 
+            add2048(); 
+            draw2048(); 
+            document.getElementById('game-title').innerText = `2048: ${current2048Score}`;
+            save(); 
+        }
+        
+        if(!b2048.includes(0)) {
+            let canMove = false;
+            for (let i = 0; i < 4; i++) {
+                for (let j = 0; j < 4; j++) {
+                    let val = b2048[i * 4 + j];
+                    if (j < 3 && val === b2048[i * 4 + (j + 1)]) canMove = true;
+                    if (i < 3 && val === b2048[(i + 1) * 4 + j]) canMove = true;
+                }
+            }
+            
+            if(!canMove) {
+                let maxTile = Math.max(...b2048); 
+                state.coins += maxTile; 
+                if(current2048Score > state.records.t2048) state.records.t2048 = current2048Score;
+                endGame('🔢', 'КРАЙ', `Най-голямо число: ${maxTile} | Спечели ${maxTile} монети!`, init2048);
+            }
+        }
+    }
+
+    // --- PONG ENGINE ---
+    function initPong() {
+        showScreen('game-screen');
+        let pongScore = 0;
+        document.getElementById('game-title').innerText = "Тенис: 0";
+        document.getElementById('hint-btn').style.display = 'none';
+        document.getElementById('board-container').innerHTML = '<canvas id="pong-canvas" width="300" height="400"></canvas>';
+        document.getElementById('game-controls').innerHTML = '<p style="text-align:center; opacity:0.5; margin:10px 0;">Движи с мишка или пръст</p>';
+        const canvas = document.getElementById('pong-canvas');
+        const ctx = canvas.getContext('2d');
+        let ball = {x:150, y:200, dx:3, dy:3}, pad = 120;
+        canvas.ontouchmove = (e) => { e.preventDefault(); pad = e.touches[0].clientX - canvas.getBoundingClientRect().left - 35; };
+        canvas.onmousemove = (e) => pad = e.offsetX - 35;
+        loop = setInterval(() => {
+            ctx.fillStyle = '#000'; ctx.fillRect(0,0,300,400);
+            ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(ball.x, ball.y, 8, 0, Math.PI*2); ctx.fill();
+            ctx.fillStyle = '#6366f1'; ctx.fillRect(pad, 380, 70, 10);
+            ball.x += ball.dx; ball.y += ball.dy;
+            if(ball.x<8 || ball.x>292) ball.dx *= -1;
+            if(ball.y<8) ball.dy *= -1;
+            if(ball.y>370 && ball.x>pad && ball.x<pad+70) { ball.dy *= -1.1; pongScore++; document.getElementById('game-title').innerText = `Тенис: ${pongScore}`; }
+            if(ball.y>400) { state.coins += pongScore; if(pongScore > state.records.pong) state.records.pong = pongScore; endGame('🏓', 'КРАЙ', `Резултат: ${pongScore} | Спечели ${pongScore} монети`, initPong); }
+        }, 1000/60);
+    }
+
+    window.onkeydown = (e) => {
+        if(e.key === 'ArrowUp') snk.dir = 'U';
+        if(e.key === 'ArrowDown') snk.dir = 'D';
+        if(e.key === 'ArrowLeft') snk.dir = 'L';
+        if(e.key === 'ArrowRight') snk.dir = 'R';
+    };
+
+    save();
 </script>
 </body>
 </html>
