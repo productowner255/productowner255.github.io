@@ -51,62 +51,64 @@
             margin: 0; display: flex; justify-content: center; align-items: center;
             min-height: 100vh; background: var(--bg-gradient); background-size: 400% 400%;
             animation: gradientBG 15s ease infinite; color: var(--text-main);
-            overflow-y: auto; user-select: none;
+            overflow-x: hidden; overflow-y: auto; user-select: none;
         }
 
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
         #app {
-            width: 95%; max-width: 700px; background: var(--app-bg); backdrop-filter: blur(15px);
+            width: 95%; max-width: 800px; background: var(--app-bg); backdrop-filter: blur(15px);
             min-height: 90vh; border-radius: 40px; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
-            padding: 30px; display: flex; flex-direction: column; position: relative; transition: all 0.5s ease;
+            padding: 40px; display: flex; flex-direction: column; position: relative; transition: all 0.5s ease;
             margin: 20px 0;
         }
 
         .damage-shake { animation: damageAnim 0.4s ease-in-out; background: rgba(254, 226, 226, 1) !important; }
         @keyframes damageAnim { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-10px); } 40%, 80% { transform: translateX(10px); } }
 
-        .header { display: flex; justify-content: space-between; align-items: center; background: var(--header-bg); padding: 15px 25px; border-radius: 20px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header { display: flex; justify-content: space-between; align-items: center; background: var(--header-bg); padding: 20px 30px; border-radius: 20px; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
 
         .screen { display: none; flex-direction: column; align-items: center; width: 100%; animation: fadeIn 0.3s ease; }
         .active { display: flex; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .menu-btn { 
-            width: 100%; padding: 25px; margin: 10px 0; border-radius: 25px; border: none; 
+            width: 100%; padding: 30px; margin: 12px 0; border-radius: 25px; border: none; 
             cursor: pointer; background: var(--card-bg); color: var(--text-main); 
-            font-family: inherit; font-weight: 900; box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
-            transition: all 0.2s; font-size: 1.2rem;
+            font-family: inherit; font-weight: 900; font-size: 1.4rem; box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            transition: all 0.2s;
         }
-        .menu-btn:hover { background-color: #cbd5e1 !important; transform: translateY(-2px); }
+        .menu-btn:hover { background-color: #cbd5e1 !important; transform: translateY(-3px); }
 
         /* SUDOKU MAP */
         .level-card {
             background: var(--card-bg); aspect-ratio: 1; display: flex; flex-direction: column; 
-            justify-content: center; align-items: center; font-weight: 900; 
+            justify-content: center; align-items: center; font-weight: 900; font-size: 1.5rem;
             border-radius: 15px; border: 2px solid var(--border); cursor: pointer; position: relative;
-            font-size: 1.2rem;
         }
         .level-locked { opacity: 0.5; cursor: not-allowed; }
-        .level-completed { background-color: var(--correct) !important; color: white !important; }
+        .level-completed { background-color: var(--correct) !important; color: white !important; border-color: #16a34a !important; }
 
-        /* SUDOKU BOARD */
-        .board { display: grid; gap: 1px; background: #94a3b8; border: 5px solid #475569; border-radius: 10px; margin: 20px 0; overflow: hidden; }
+        /* SUDOKU BOARD LOGIC VISUALS */
+        .board { display: grid; gap: 2px; background: #94a3b8; border: 6px solid #475569; border-radius: 12px; margin: 25px 0; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         .grid-4 { grid-template-columns: repeat(4, 1fr); width: 400px; }
         .grid-6 { grid-template-columns: repeat(6, 1fr); width: 500px; }
-        .grid-9 { grid-template-columns: repeat(9, 1fr); width: 100%; max-width: 600px; }
+        .grid-9 { grid-template-columns: repeat(9, 1fr); width: 100%; max-width: 650px; }
         
-        .cell { background: white; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; font-weight: 800; cursor: pointer; color: #1e293b; }
+        .cell { background: white; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; font-size: 2rem; font-weight: 800; cursor: pointer; color: #1e293b; }
         .cell.fixed { color: #64748b; background: #f8fafc; }
-        .cell.selected { background: #e0e7ff; box-shadow: inset 0 0 0 4px var(--primary); }
+        .cell.selected { background: #e0e7ff; box-shadow: inset 0 0 0 5px var(--primary); }
 
-        canvas { background: #f8fafc; border: 5px solid #e2e8f0; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        canvas { background: #f8fafc; border: 8px solid #e2e8f0; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); }
         #tetrisCanvas { background: #1e293b; border-color: #334155; }
 
-        .btn { padding: 15px 30px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; font-family: inherit; transition: 0.2s; font-size: 1rem; }
+        .btn { padding: 18px 35px; border-radius: 20px; border: none; font-weight: 800; font-size: 1.1rem; cursor: pointer; font-family: inherit; transition: 0.2s; }
         .btn-primary { background: var(--primary); color: white; }
 
         .result-screen { position: absolute; inset: 0; background: var(--app-bg); z-index: 500; display: none; flex-direction: column; align-items: center; justify-content: center; border-radius: 40px; text-align: center; padding: 30px; }
+        
+        .theme-selector { display: flex; gap: 15px; margin-top: 20px; }
+        .theme-dot { width: 45px; height: 45px; border-radius: 50%; cursor: pointer; border: 4px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
@@ -114,59 +116,64 @@
 <div id="app">
     <div class="header">
         <div class="life-container">
-            <div id="header-lives" style="color:var(--error); font-weight:900; font-size: 1.4rem;">❤️❤️❤️❤️❤️</div>
+            <div id="header-lives" style="color:var(--error); font-weight:900; font-size: 1.5rem;">❤️❤️❤️❤️❤️</div>
             <div id="life-timer" style="font-size: 12px; font-weight: bold;">Arcade Ready</div>
         </div>
-        <div style="color:var(--coin); font-weight:900; font-size: 1.4rem;">💰 <span id="coins-display">300</span></div>
+        <div style="color:var(--coin); font-weight:900; font-size: 1.5rem;">💰 <span id="coins-display">300</span></div>
     </div>
 
+    <!-- MAIN MENU -->
     <div id="menu-screen" class="screen active">
-        <h1 style="margin: 0 0 30px 0; font-size: 2.5rem;">Arcade World</h1>
-        <button class="menu-btn" onclick="showScreen('sudoku-map')"><b>🧩 Sudoku</b><br><span id="stat-sudoku" style="font-size:0.9rem">Level 0/56</span></button>
-        <button class="menu-btn" onclick="startSnakeGame()"><b>🐍 Snake</b><br><span id="stat-snake" style="font-size:0.9rem">Best Score: 0</span></button>
-        <button class="menu-btn" onclick="startTetris()"><b>🧱 Tetris</b><br><span id="stat-tetris" style="font-size:0.9rem">Best Score: 0</span></button>
+        <h1 style="margin: 0 0 30px 0; font-size: 3rem;">Arcade World</h1>
+        <button class="menu-btn" onclick="showScreen('sudoku-map')"><b>🧩 Sudoku</b><br><span id="stat-sudoku" style="font-size:1rem">Level 0/56</span></button>
+        <button class="menu-btn" onclick="startSnakeGame()"><b>🐍 Snake</b><br><span id="stat-snake" style="font-size:1rem">Best Score: 0</span></button>
+        <button class="menu-btn" onclick="startTetris()"><b>🧱 Tetris</b><br><span id="stat-tetris" style="font-size:1rem">Best Score: 0</span></button>
         
-        <p style="margin-top:30px; font-weight:bold;">THEMES:</p>
-        <div class="theme-selector" style="display:flex; gap:15px;">
-            <div class="theme-dot" style="width:40px; height:40px; border-radius:50%; background:#6366f1; cursor:pointer; border:3px solid white;" onclick="setTheme('default')"></div>
-            <div class="theme-dot" style="width:40px; height:40px; border-radius:50%; background:#ec4899; cursor:pointer; border:3px solid white;" onclick="setTheme('pink')"></div>
-            <div class="theme-dot" style="width:40px; height:40px; border-radius:50%; background:#1e1b4b; cursor:pointer; border:3px solid white;" onclick="setTheme('neon')"></div>
+        <p style="margin-top:30px; font-weight:bold; font-size:1.1rem">THEMES:</p>
+        <div class="theme-selector">
+            <div class="theme-dot" style="background:#6366f1" onclick="setTheme('default')"></div>
+            <div class="theme-dot" style="background:#ec4899" onclick="setTheme('pink')"></div>
+            <div class="theme-dot" style="background:#1e1b4b" onclick="setTheme('neon')"></div>
         </div>
     </div>
 
+    <!-- SUDOKU MAP -->
     <div id="sudoku-map" class="screen">
-        <h2>Sudoku Progress</h2>
-        <div id="level-list" style="display:grid; grid-template-columns: repeat(4, 1fr); gap:15px; width:100%; overflow-y:auto; max-height:50vh; padding:10px;"></div>
-        <button class="btn btn-primary" style="margin-top:25px; width:100%" onclick="showScreen('menu-screen')">Back to Menu</button>
+        <h2 style="font-size: 2rem;">Sudoku Progress</h2>
+        <div id="level-list" style="display:grid; grid-template-columns: repeat(4, 1fr); gap:15px; width:100%; overflow-y:auto; max-height:55vh; padding:10px;"></div>
+        <button class="btn btn-primary" style="margin-top:30px; width:100%" onclick="showScreen('menu-screen')">Back to Menu</button>
     </div>
 
+    <!-- SUDOKU GAME -->
     <div id="sudoku-game" class="screen">
-        <h3 id="sudoku-title" style="font-size:1.8rem">Level</h3>
+        <h3 id="sudoku-title" style="font-size: 2rem;">Level</h3>
         <div id="sudoku-board" class="board"></div>
-        <div id="sudoku-keypad" style="display:grid; grid-template-columns: repeat(5, 1fr); gap:10px; width:100%"></div>
-        <button class="btn btn-primary" style="margin-top:25px; width:100%" onclick="buyHint()">💡 Hint (-50 💰)</button>
-        <button class="btn" style="margin-top:10px; width:100%; background:#f1f5f9; color:#334155" onclick="showScreen('sudoku-map')">Quit Game</button>
+        <div id="sudoku-keypad" style="display:grid; grid-template-columns: repeat(5, 1fr); gap:12px; width:100%"></div>
+        <button class="btn btn-primary" style="margin-top:30px; width:100%" onclick="buyHint()">💡 Hint (-50 💰)</button>
+        <button class="btn" style="margin-top:15px; width:100%; background:#f1f5f9; color:#334155" onclick="showScreen('sudoku-map')">Quit Game</button>
     </div>
 
+    <!-- SNAKE GAME -->
     <div id="snake-screen" class="screen">
-        <div style="width:100%; display:flex; justify-content:space-between; margin-bottom:15px; font-weight:900; font-size:1.5rem">
+        <div style="width:100%; display:flex; justify-content:space-between; margin-bottom:15px; font-weight:900; font-size: 1.5rem;">
             <span>Score: <span id="snake-score">0</span></span>
         </div>
-        <canvas id="snakeCanvas" width="400" height="400"></canvas>
-        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:15px; margin-top:25px">
-            <div></div><button class="btn" style="padding:20px" onclick="snakeDir('UP')">▲</button><div></div>
-            <button class="btn" style="padding:20px" onclick="snakeDir('LEFT')">◀</button>
-            <button class="btn" style="padding:20px" onclick="snakeDir('DOWN')">▼</button>
-            <button class="btn" style="padding:20px" onclick="snakeDir('RIGHT')">▶</button>
+        <canvas id="snakeCanvas" width="500" height="500"></canvas>
+        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:15px; margin-top:30px">
+            <div></div><button class="btn" style="font-size: 2rem; padding: 20px;" onclick="snakeDir('UP')">▲</button><div></div>
+            <button class="btn" style="font-size: 2rem; padding: 20px;" onclick="snakeDir('LEFT')">◀</button>
+            <button class="btn" style="font-size: 2rem; padding: 20px;" onclick="snakeDir('DOWN')">▼</button>
+            <button class="btn" style="font-size: 2rem; padding: 20px;" onclick="snakeDir('RIGHT')">▶</button>
         </div>
     </div>
 
+    <!-- TETRIS GAME -->
     <div id="tetris-screen" class="screen">
-        <div style="width:100%; display:flex; justify-content:space-between; margin-bottom:15px; font-weight:900; font-size:1.5rem">
+        <div style="width:100%; display:flex; justify-content:space-between; margin-bottom:15px; font-weight:900; font-size: 1.5rem;">
             <span>Score: <span id="tetris-score">0</span></span>
         </div>
-        <canvas id="tetrisCanvas" width="300" height="600"></canvas>
-        <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:10px; margin-top:20px; width:100%">
+        <canvas id="tetrisCanvas" width="360" height="720"></canvas>
+        <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:10px; margin-top:25px; width:100%">
             <button class="btn" onclick="tetrisMove(-1)">◀</button>
             <button class="btn" onclick="tetrisRotate()">🔄</button>
             <button class="btn" onclick="tetrisMove(1)">▶</button>
@@ -174,10 +181,11 @@
         </div>
     </div>
 
+    <!-- RESULT MODAL -->
     <div id="result-modal" class="result-screen">
-        <h1 id="res-icon" style="font-size:6rem; margin:0">🏆</h1>
-        <h2 id="res-title" style="font-size:2.5rem">EXCELLENT!</h2>
-        <p id="res-desc" style="font-size:1.2rem"></p>
+        <h1 id="res-icon" style="font-size:7rem; margin:0">🏆</h1>
+        <h2 id="res-title" style="font-size: 2.5rem;">EXCELLENT!</h2>
+        <p id="res-desc" style="font-size: 1.3rem;"></p>
         <div style="display:flex; flex-direction:column; gap:15px; width:100%; margin-top:30px">
             <button id="btn-again" class="btn btn-primary" onclick="">TRY AGAIN</button>
             <button class="btn" onclick="showScreen('menu-screen')">BACK TO MENU</button>
@@ -186,6 +194,7 @@
 </div>
 
 <script>
+    // --- STATE & STORAGE ---
     const MAX_LIVES = 5;
     const REFILL_TIME = 120000;
     let activeGameType = null;
@@ -280,8 +289,10 @@
         document.getElementById('stat-sudoku').innerText = `Level ${gameState.completedLevels.length}/56`;
         document.getElementById('stat-snake').innerText = `Best Score: ${gameState.snakeHighScore}`;
         document.getElementById('stat-tetris').innerText = `Best Score: ${gameState.tetrisHighScore}`;
+        document.getElementById('coins-display').innerText = gameState.coins;
     }
 
+    // --- LOGICAL SUDOKU GENERATOR ---
     const seeds = {
         4: [1,2,3,4, 3,4,1,2, 2,1,4,3, 4,3,2,1],
         6: [1,2,3,4,5,6, 4,5,6,1,2,3, 2,3,1,5,6,4, 5,6,4,2,3,1, 3,1,2,6,4,5, 6,4,5,3,1,2],
@@ -315,7 +326,10 @@
             const card = document.createElement('div');
             card.className = `level-card ${!isUnl ? 'level-locked' : ''} ${isComp ? 'level-completed' : ''}`;
             if (!isUnl) card.innerHTML = `<span>${l.id}</span>🔒`;
-            else { card.innerHTML = l.id; card.onclick = () => startSudoku(l.id - 1); }
+            else {
+                card.innerHTML = l.id;
+                card.onclick = () => startSudoku(l.id - 1);
+            }
             list.appendChild(card);
         });
     }
@@ -359,7 +373,7 @@
         } else {
             gameState.lives.sudoku--; if(gameState.lives.sudoku === MAX_LIVES-1) gameState.lastRefill.sudoku = Date.now();
             save(); triggerError(); renderLifeUI();
-            if(gameState.lives.sudoku <= 0) showResult("💔", "GAME OVER", "No more lives!", () => showScreen('menu-screen'));
+            if(gameState.lives.sudoku <= 0) showResult("💔", "GAME OVER", "Без повече животи за Судоку!", () => showScreen('menu-screen'));
         }
     }
 
@@ -367,17 +381,17 @@
         if(!gameState.completedLevels.includes(curSudoku.id)) {
             gameState.completedLevels.push(curSudoku.id); gameState.coins += curSudoku.reward;
         }
-        save(); showResult("✔️", "CLEARED!", `Level complete! +${curSudoku.reward} 💰`, () => showScreen('sudoku-map'));
+        save(); showResult("✔️", "ПОБЕДА!", `Ниво ${curSudoku.id} е готово! +${curSudoku.reward} 💰`, () => showScreen('sudoku-map'));
     }
 
-    // --- SNAKE (Scaled) ---
+    // --- SNAKE (Large) ---
     let snake, food, snakeDirVal, snakeInterval, snakeScore;
     const sCtx = document.getElementById('snakeCanvas').getContext('2d');
     function startSnakeGame() {
         if(gameState.lives.snake <= 0) return;
         showScreen('snake-screen');
         snake = [{x:10, y:10}, {x:10, y:11}]; food = {x:5, y:5}; snakeDirVal = 'UP'; snakeScore = 0;
-        snakeInterval = setInterval(updateSnake, 130);
+        snakeInterval = setInterval(updateSnake, 120);
     }
     function snakeDir(d) {
         if(d==='UP' && snakeDirVal==='DOWN' || d==='DOWN' && snakeDirVal==='UP' || d==='LEFT' && snakeDirVal==='RIGHT' || d==='RIGHT' && snakeDirVal==='LEFT') return;
@@ -391,21 +405,21 @@
         if(head.x===food.x && head.y===food.y) {
             snakeScore += 10; food = {x:Math.floor(Math.random()*20), y:Math.floor(Math.random()*20)};
         } else snake.pop();
-        sCtx.clearRect(0,0,400,400);
-        sCtx.fillStyle='red'; sCtx.beginPath(); sCtx.arc(head.x*20+10, head.y*20+10, 10, 0, Math.PI*2); // Using 20 as scale
-        sCtx.fillStyle='red'; sCtx.fillRect(food.x*20+2, food.y*20+2, 16, 16);
+        sCtx.clearRect(0,0,500,500);
+        sCtx.fillStyle='red'; sCtx.beginPath(); sCtx.arc(food.x*25+12.5, food.y*25+12.5, 10, 0, Math.PI*2); sCtx.fill();
         snake.forEach((s,i)=>{
             sCtx.fillStyle = i===0 ? '#059669':'#10b981';
-            sCtx.fillRect(s.x*20, s.y*20, 19, 19);
+            sCtx.beginPath(); sCtx.arc(s.x*25+12.5, s.y*25+12.5, i===0 ? 12.5:10, 0, Math.PI*2); sCtx.fill();
         });
         document.getElementById('snake-score').innerText = snakeScore;
     }
     function endSnake() {
-        clearInterval(snakeInterval); gameState.lives.snake--; save();
-        showResult("🐍", "SNAKE OVER", `Score: ${snakeScore}`, () => startSnakeGame());
+        clearInterval(snakeInterval); gameState.lives.snake--; if(gameState.lives.snake === MAX_LIVES-1) gameState.lastRefill.snake = Date.now();
+        const rew = Math.floor(snakeScore/5); gameState.coins += rew; if(snakeScore > gameState.snakeHighScore) gameState.snakeHighScore = snakeScore;
+        save(); triggerError(); showResult("🐍", "КРАЙ!", `Резултат: ${snakeScore} | Награда: +${rew} 💰`, () => startSnakeGame());
     }
 
-    // --- TETRIS (Scaled) ---
+    // --- TETRIS (Large) ---
     let tCtx = document.getElementById('tetrisCanvas').getContext('2d');
     let tetrisArena, tetrisPlayer, tetrisInterval, tetrisScoreVal;
     const tColors = [null, '#06b6d4', '#3b82f6', '#f97316', '#eab308', '#22c55e', '#a855f7', '#ef4444'];
@@ -442,9 +456,9 @@
         document.getElementById('tetris-score').innerText = tetrisScoreVal;
     }
     function drawTetris() {
-        tCtx.fillStyle='#1e293b'; tCtx.fillRect(0,0,300,600);
-        tetrisArena.forEach((row,y)=>row.forEach((v,x)=>{ if(v) { tCtx.fillStyle=tColors[v]; tCtx.fillRect(x*30,y*30,29,29); }})); // Using 30 as scale
-        tetrisPlayer.matrix.forEach((row,y)=>row.forEach((v,x)=>{ if(v) { tCtx.fillStyle=tColors[v]; tCtx.fillRect((x+tetrisPlayer.pos.x)*30,(y+tetrisPlayer.pos.y)*30,29,29); }}));
+        tCtx.fillStyle='#1e293b'; tCtx.fillRect(0,0,360,720);
+        tetrisArena.forEach((row,y)=>row.forEach((v,x)=>{ if(v) { tCtx.fillStyle=tColors[v]; tCtx.fillRect(x*36,y*36,35,35); }}));
+        tetrisPlayer.matrix.forEach((row,y)=>row.forEach((v,x)=>{ if(v) { tCtx.fillStyle=tColors[v]; tCtx.fillRect((x+tetrisPlayer.pos.x)*36,(y+tetrisPlayer.pos.y)*36,35,35); }}));
     }
     function tetrisMove(d) { tetrisPlayer.pos.x+=d; if(collide()) tetrisPlayer.pos.x-=d; drawTetris(); }
     function tetrisRotate() {
@@ -453,8 +467,9 @@
     }
     function tetrisDrop() { tetrisUpdate(); }
     function endTetris() {
-        clearInterval(tetrisInterval); gameState.lives.tetris--; save();
-        showResult("🧱", "GAME OVER", `Score: ${tetrisScoreVal}`, () => startTetris());
+        clearInterval(tetrisInterval); gameState.lives.tetris--; if(gameState.lives.tetris === MAX_LIVES-1) gameState.lastRefill.tetris = Date.now();
+        if(tetrisScoreVal > gameState.tetrisHighScore) gameState.tetrisHighScore = tetrisScoreVal;
+        save(); triggerError(); showResult("🧱", "КРАЙ!", `Резултат: ${tetrisScoreVal}`, () => startTetris());
     }
 
     function buyHint() {
@@ -469,12 +484,19 @@
     window.addEventListener('keydown', (e) => {
         if (activeGameType === 'snake') {
             if (e.key.includes('Arrow')) snakeDir(e.key.replace('Arrow', '').toUpperCase());
+            if (['w','a','s','d'].includes(e.key)) {
+                const map = {w:'UP', s:'DOWN', a:'LEFT', d:'RIGHT'};
+                snakeDir(map[e.key]);
+            }
         }
         if (activeGameType === 'tetris') {
-            if (e.key === 'ArrowLeft') tetrisMove(-1);
-            if (e.key === 'ArrowRight') tetrisMove(1);
-            if (e.key === 'ArrowUp') tetrisRotate();
-            if (e.key === 'ArrowDown') tetrisDrop();
+            if (e.key === 'ArrowLeft' || e.key === 'a') tetrisMove(-1);
+            if (e.key === 'ArrowRight' || e.key === 'd') tetrisMove(1);
+            if (e.key === 'ArrowUp' || e.key === 'w') tetrisRotate();
+            if (e.key === 'ArrowDown' || e.key === 's') tetrisDrop();
+        }
+        if (activeGameType === 'sudoku' && curSudoku && selectedIdx !== null) {
+            if (e.key >= '1' && e.key <= '9') { const v = parseInt(e.key); if (v <= curSudoku.size) sudokuInput(v); }
         }
     });
 
