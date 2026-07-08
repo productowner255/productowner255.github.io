@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="bg">
 <head>
     <meta charset="UTF-8">
@@ -515,4 +516,4 @@
     load();
 </script>
 </body>
-</html># productowner255.github.io
+</html># ArcadeGames.github.io
