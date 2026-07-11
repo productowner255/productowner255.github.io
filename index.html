@@ -53,6 +53,9 @@
         }
         .menu-btn:hover { transform: scale(1.02); }
 
+        .social-container { display: flex; gap: 10px; margin-top: auto; padding-top: 20px; }
+        .social-btn { flex: 1; padding: 12px; border-radius: 15px; text-align: center; text-decoration: none; color: white; font-weight: 900; font-size: 0.7rem; }
+
         .d-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; justify-items: center; align-self: center;}
         .arrow-btn {
             width: 60px; height: 60px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
@@ -63,34 +66,23 @@
         .action-btn { background: var(--secondary); font-weight: bold; font-size: 0.8rem; }
 
         .lvl-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 10px; }
-        .lvl-btn { 
-            aspect-ratio: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); 
-            border-radius: 15px; color: white; font-weight: 900; cursor: pointer; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: all 0.3s ease; font-size: 1.1rem;
-        }
+        .lvl-btn { aspect-ratio: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; color: white; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
         .lvl-btn.locked { opacity: 0.3; cursor: not-allowed; }
         .lvl-btn.current { border: 2px solid var(--accent); box-shadow: 0 0 10px var(--accent); }
 
         .grid { display: grid; gap: 2px; background: #334155; padding: 5px; border-radius: 15px; width: 100%; aspect-ratio: 1; border: 2px solid #334155; }
         .cell { background: #0f172a; display: flex; justify-content: center; align-items: center; font-weight: 900; color: white; transition: 0.2s; cursor: pointer; font-size: 1.3rem; }
-        .cell.fixed { background: #020617; color: #64748b; cursor: default; }
-        .cell.selected { background: #1e293b; box-shadow: inset 0 0 0 2px var(--primary); }
+        .cell.fixed { background: #020617; color: #64748b; }
         
-        .t-2 { background: #eee4da; color: #776e65; } .t-4 { background: #ede0c8; color: #776e65; }
-        .t-8 { background: #f2b179; color: white; } .t-16 { background: #f59563; color: white; }
-        .t-32 { background: #f67c5f; color: white; } .t-64 { background: #f65e3b; color: white; }
-        .t-128 { background: #edcf72; color: white; } .t-256 { background: #edcc61; color: white; }
-        .t-512 { background: #edc850; color: white; } .t-1024 { background: #edc53f; color: white; }
-        .t-2048 { background: #edc22e; color: white; box-shadow: 0 0 10px #edc22e; }
+        .t-2 { background: #eee4da; color: #776e65; } .t-2048 { background: #edc22e; color: white; box-shadow: 0 0 10px #edc22e; }
 
         canvas { background: #000; border-radius: 25px; width: 100%; border: 2px solid #1e293b; max-height: 320px; }
         
-        .shop-item { background: rgba(255,255,255,0.03); padding: 12px 18px; border-radius: 20px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .shop-item { background: rgba(255,255,255,0.03); padding: 12px 18px; border-radius: 20px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05); }
         .buy-btn { background: var(--primary); border: none; color: white; padding: 8px 15px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        .buy-btn:disabled { background: #16a34a; cursor: default; }
 
         .modal { position: absolute; inset: 0; background: rgba(2, 6, 23, 0.98); z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 40px; border-radius: 40px; text-align: center; }
-        #score-container { display: flex; gap: 10px; align-items: center; }
         .score-box { background: rgba(245, 158, 11, 0.15); padding: 5px 12px; border-radius: 10px; border: 1px solid var(--accent); color: var(--accent); font-weight: 900; font-size: 0.9rem; }
     </style>
 </head>
@@ -118,13 +110,12 @@
         <button class="menu-btn" onclick="initPong()">🏓 ТЕНИС <span>Rec: <b id="rec-pong">0</b></span></button>
         <button class="menu-btn" onclick="initSkyDash()">🚀 SKY DASH <span>Rec: <b id="rec-sky">0</b></span></button>
         <button class="menu-btn" onclick="initStarRaid()">🌠 STAR RAID <span>Rec: <b id="rec-star">0</b></span></button>
-        <button class="menu-btn" style="background: var(--accent);" onclick="showShop()">🛒 МАГАЗИН</button>
-    </div>
-
-    <div id="sdk-levels-screen" class="screen">
-        <h2 style="text-align:center;">Избери Ниво</h2>
-        <div id="lvl-container" class="lvl-grid"></div>
-        <button class="menu-btn" style="background:#1e293b; margin-top:30px; justify-content: center;" onclick="backToMenu()">НАЗАД</button>
+        <button class="menu-btn" style="background: var(--accent);" onclick="showShop()">🛒 МАГАЗИН (АКСЕСОАРИ)</button>
+        
+        <div class="social-container">
+            <a href="https://www.tiktok.com/@arcade_verse" target="_blank" class="social-btn" style="background:#000; border:1px solid #ff0050;">TIKTOK</a>
+            <a href="https://www.instagram.com/arcad_everse/" target="_blank" class="social-btn" style="background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);">INSTAGRAM</a>
+        </div>
     </div>
 
     <div id="shop-screen" class="screen">
@@ -133,30 +124,28 @@
         <button class="menu-btn" style="background:#1e293b; margin-top:20px; justify-content: center;" onclick="backToMenu()">НАЗАД</button>
     </div>
 
+    <div id="sdk-levels-screen" class="screen">
+        <h2 style="text-align:center;">Избери Ниво</h2>
+        <div id="lvl-container" class="lvl-grid"></div>
+        <button class="menu-btn" style="background:#1e293b; margin-top:30px; justify-content: center;" onclick="backToMenu()">НАЗАД</button>
+    </div>
+
     <div id="game-screen" class="screen">
         <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom:10px;">
             <button onclick="backToMenu()" style="background:rgba(255,255,255,0.1); border:none; color:white; padding:8px 15px; border-radius:12px; font-weight:bold;">←</button>
-            <div id="score-container">
+            <div style="display:flex; gap:10px;">
                 <div class="score-box" id="best-display">Best: 0</div>
                 <div class="score-box" id="score-display">0</div>
             </div>
         </div>
         <div id="board-container"></div>
-        
-        <!-- ГЛАВЕН КОНТРОЛЕР ЗА МОБИЛНИ -->
-        <div class="game-controls" id="ctrl-area">
+        <div id="ctrl-area" style="display:none;">
             <div class="d-pad">
-                <div></div>
-                <button class="arrow-btn" id="btn-up">↑</button>
-                <div></div>
-                
+                <div></div><button class="arrow-btn" id="btn-up">↑</button><div></div>
                 <button class="arrow-btn" id="btn-left">←</button>
                 <button class="arrow-btn action-btn" id="btn-center">OK</button>
                 <button class="arrow-btn" id="btn-right">→</button>
-                
-                <div></div>
-                <button class="arrow-btn" id="btn-down">↓</button>
-                <div></div>
+                <div></div><button class="arrow-btn" id="btn-down">↓</button><div></div>
             </div>
         </div>
     </div>
@@ -182,12 +171,13 @@
         document.getElementById('rec-star').innerText = state.records.star;
     }
 
-    // Животи регенерация
     setInterval(() => {
         if(state.lives < 10) {
             let diff = Date.now() - state.lastLifeTime;
             if(diff >= 180000) { state.lives++; state.lastLifeTime = Date.now(); save(); }
-        }
+            let rem = Math.ceil((180000 - diff) / 1000);
+            document.getElementById('life-timer').innerText = `${Math.floor(rem/60)}:${(rem%60).toString().padStart(2,'0')}`;
+        } else document.getElementById('life-timer').innerText = "Full";
     }, 1000);
 
     function showScreen(id) {
@@ -196,12 +186,25 @@
         document.getElementById(id).classList.add('active');
         document.getElementById('game-modal').style.display = 'none';
         document.getElementById('ctrl-area').style.display = "none";
-        document.getElementById('score-container').style.display = "flex";
-        // Reset center button text
         document.getElementById('btn-center').innerText = "OK";
     }
 
     function backToMenu() { showScreen('menu-screen'); }
+
+    // --- МАГАЗИН ---
+    function showShop() {
+        showScreen('shop-screen');
+        const container = document.getElementById('shop-items-container');
+        container.innerHTML = `<div class="shop-item"><div><h3>❤️ Животи</h3><p>Допълни до 10</p></div><button class="buy-btn" onclick="buyLife()">1000 💰</button></div>`;
+        const accs = [{id:'diaSnake',name:'💎 Диам. Змия',p:5000},{id:'goldPaddle',name:'👑 Златна Хилка',p:8000},{id:'fireSky',name:'🔥 Огнена Ракета',p:12000},{id:'neonSdk',name:'🟣 Neon Grid',p:10000}];
+        accs.forEach(acc => {
+            const owned = state.items[acc.id];
+            container.innerHTML += `<div class="shop-item"><div><h3>${acc.name}</h3></div><button class="buy-btn" ${owned?'disabled':''} onclick="buyAccessory('${acc.id}', ${acc.p})">${owned?'КУПЕНО':acc.p+' 💰'}</button></div>`;
+        });
+    }
+    function buyLife() { if(state.coins>=1000 && state.lives<10) { state.coins-=1000; state.lives=10; save(); showShop(); } }
+    function buyAccessory(id, price) { if(state.coins >= price) { state.coins -= price; state.items[id] = true; save(); showShop(); } }
+
     function setScore(v, gameKey) { 
         document.getElementById('score-display').innerText = v; 
         if(gameKey) document.getElementById('best-display').innerText = "Best: " + (state.records[gameKey] || 0);
@@ -284,12 +287,12 @@
             ctx.fillStyle = '#050816'; ctx.fillRect(0,0,300,400); frame++;
             ship.v += 0.35; ship.y += ship.v;
             if(frame % 90 === 0) pipes.push({x:300, h:Math.random()*180+60, passed: false});
-            pipes.forEach((p, i) => {
+            pipes.forEach(p => {
                 p.x -= 2.5; ctx.fillStyle = '#1e293b'; ctx.fillRect(p.x, 0, 45, p.h); ctx.fillRect(p.x, p.h+120, 45, 400);
                 if(!p.passed && p.x < 100) { p.passed = true; score += 2; setScore(score, "sky"); }
                 if(100 > p.x && 100 < p.x+45 && (ship.y < p.h || ship.y > p.h+120)) triggerLoss('🚀', 'BOOM!', score, "sky", initSkyDash);
             });
-            ctx.fillStyle = '#ec4899'; ctx.fillRect(100, ship.y, 20, 20);
+            ctx.fillStyle = state.items.fireSky ? '#f97316' : '#ec4899'; ctx.fillRect(100, ship.y, 20, 20);
             if(ship.y > 390 || ship.y < 0) triggerLoss('🚀', 'CRASH!', score, "sky", initSkyDash);
         }, 1000/60);
     }
@@ -311,7 +314,7 @@
             enemies.forEach((e, ei) => {
                 e.y += 2; ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.arc(e.x+15, e.y+15, 12, 0, 7); ctx.fill();
                 bullets.forEach((b, bi) => { if(b.x > e.x && b.x < e.x+30 && b.y > e.y && b.y < e.y+30) { enemies.splice(ei,1); bullets.splice(bi,1); score++; setScore(score, "star"); } });
-                if(e.y > 400) triggerLoss('🌠', 'GAME OVER', score, "star", initStarRaid);
+                if(e.y > 400) triggerLoss('🌠', 'КРАЙ!', score, "star", initStarRaid);
             });
             ctx.fillStyle = '#6366f1'; ctx.fillRect(raidPlayerX, 370, 30, 20);
         }, 1000/60);
@@ -329,7 +332,7 @@
         loop = setInterval(() => {
             ctx.fillStyle = '#000'; ctx.fillRect(0,0,300,400);
             ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(ball.x, ball.y, 7, 0, 7); ctx.fill();
-            ctx.fillStyle = '#6366f1'; ctx.fillRect(p1, 385, 60, 10);
+            ctx.fillStyle = state.items.goldPaddle ? '#fbbf24' : '#6366f1'; ctx.fillRect(p1, 385, 60, 10);
             ctx.fillStyle = '#ef4444'; ctx.fillRect(cpu, 5, 60, 10);
             ball.x += ball.dx; ball.y += ball.dy;
             if(ball.x<0 || ball.x>300) ball.dx *= -1;
@@ -357,17 +360,13 @@
     function initSudoku(lvl) {
         showScreen('game-screen'); currentGame = "sudoku";
         document.getElementById('score-container').style.display = "none";
-        let size = lvl > 20 ? 9 : 4;
         const container = document.getElementById('board-container');
-        container.innerHTML = `<div id="sdk-grid" class="grid" style="grid-template-columns: repeat(${size}, 1fr)"></div>`;
+        container.innerHTML = `<div id="sdk-grid" class="grid" style="grid-template-columns: repeat(4, 1fr)"></div>`;
         const g = document.getElementById('sdk-grid');
-        for(let i=0; i<size*size; i++) {
-            let c = document.createElement('div'); c.className = "cell"; c.innerText = Math.random() > 0.5 ? Math.floor(Math.random()*size)+1 : "";
-            g.appendChild(c);
-        }
+        for(let i=0; i<16; i++) { let c = document.createElement('div'); c.className = "cell"; g.appendChild(c); }
     }
 
-    // --- ОБРАБОТКА НА КОНТРОЛИТЕ ---
+    // --- КОНТРОЛИ ---
     function handleInput(action) {
         if(currentGame === "snake") {
             if(action === 'U' && snkDir.y === 0) snkDir = {x:0, y:-1};
@@ -385,14 +384,12 @@
         if(currentGame === "pong") window.pongMove(action);
     }
 
-    // Бутони за управление (Touch & Click)
     document.getElementById('btn-up').onclick = () => handleInput('U');
     document.getElementById('btn-down').onclick = () => handleInput('D');
     document.getElementById('btn-left').onclick = () => handleInput('L');
     document.getElementById('btn-right').onclick = () => handleInput('R');
     document.getElementById('btn-center').onclick = () => handleInput('C');
 
-    // Поддръжка на клавиатура
     window.addEventListener('keydown', (e) => {
         const keyMap = { ArrowUp: 'U', ArrowDown: 'D', ArrowLeft: 'L', ArrowRight: 'R', ' ': 'C', w: 'U', s: 'D', a: 'L', d: 'R' };
         if(keyMap[e.key]) handleInput(keyMap[e.key]);
